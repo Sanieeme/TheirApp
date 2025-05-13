@@ -1,0 +1,56 @@
+/* Form Container */
+form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #111;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Labels */
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Inputs, Select, Textarea */
+form input[type="text"],
+form input[type="email"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  transition: border 0.3s ease;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #d4af37;
+  outline: none;
+}
+
+/* Submit Button */
+form button[type="submit"] {
+  background-color: #d4af37;
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+  background-color: #b8942e;
+}

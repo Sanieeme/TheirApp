@@ -1,0 +1,85 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     /* white text */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+#mains {
+    background-color: #000; /* black background */
+    color: white;
+}
+
+/* Header (Navbar) */
+.navbar {
+    background-color: #000 !important;
+    border-bottom: 2px solid #d4af37; /* gold underline */
+    padding: 1rem 2rem;
+}
+
+.navbar-brand, 
+.navbar-nav .nav-link {
+    color: #fff !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #d4af37 !important; /* gold on hover/active */
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    background-color: #000;
+    border: 1px solid #d4af37;
+}
+
+.dropdown-item {
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background-color: #d4af37;
+    color: #000;
+}
+
+/* Main */
+main {
+    flex: 1;
+    padding: 2rem 1rem;
+}
+
+/* Carousel */
+.carousel-item img {
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); /* gold glow */
+    margin-bottom: 2rem;
+}
+
+/* Footer */
+footer {
+    background-color: #000;
+    color: #fff;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    border-top: 2px solid #d4af37;
+    margin-top: auto;
+}
+
+footer a {
+    color: #d4af37;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
