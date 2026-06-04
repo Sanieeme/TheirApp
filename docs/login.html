@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Bono Foundation</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #111, #000);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* CARD */
+.login-box {
+    width: 380px;
+    background: rgba(17, 17, 17, 0.95);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(212,175,55,0.4);
+    box-shadow: 0 0 40px rgba(212,175,55,0.12);
+    backdrop-filter: blur(10px);
+}
+
+/* TITLE */
+.login-box h2 {
+    text-align: center;
+    color: #d4af37;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.login-box p {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #0f0f0f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 10px rgba(212,175,55,0.3);
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    background: #d4af37;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+button:hover {
+    background: #b8942e;
+    transform: scale(1.02);
+}
+
+button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+/* SPINNER */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #000;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+/* ERROR */
+#error {
+    color: #ff4d4d;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+    <h2>Bono Admin</h2>
+    <p>Secure Access Portal</p>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button id="btn" onclick="login()">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">Login</span>
+    </button>
+
+    <div id="error"></div>
+
+    <div class="footer">© 2025 Bono Foundation</div>
+</div>
+
+<script>
+async function login() {
+
+    const btn = document.getElementById("btn");
+    const spinner = document.getElementById("spinner");
+    const btnText = document.getElementById("btnText");
+    const error = document.getElementById("error");
+
+    error.innerText = "";
+    btn.disabled = true;
+    spinner.style.display = "block";
+    btnText.innerText = "Signing in...";
+
+    try {
+        const res = await fetch("http://127.0.0.1:8000/auth/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: username.value,
+                password: password.value
+            })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem("token", data.access_token);
+            window.location.href = "admin.html";
+        } else {
+            error.innerText = data.detail || "Invalid login";
+        }
+
+    } catch (err) {
+        error.innerText = "Backend not reachable";
+    }
+
+    btn.disabled = false;
+    spinner.style.display = "none";
+    btnText.innerText = "Login";
+}
+</script>
+
+</body>
+</html>

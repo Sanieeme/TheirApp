@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard | Bono Foundation</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0b0b0b;
+    color: white;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #000;
+    position: fixed;
+    border-right: 1px solid #d4af37;
+    padding: 20px;
+}
+
+.logo {
+    color: #d4af37;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.menu a {
+    display: block;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+.menu a:hover {
+    background: #d4af37;
+    color: black;
+}
+
+/* MAIN */
+.main {
+    margin-left: 260px;
+    padding: 25px;
+}
+
+h1 {
+    color: #d4af37;
+}
+
+/* STATS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat {
+    background: #111;
+    border: 1px solid #d4af37;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat h2 {
+    color: #d4af37;
+    margin: 0;
+}
+
+/* CARDS */
+.card {
+    background: #141414;
+    border: 1px solid rgba(212,175,55,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* BUTTONS */
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.approve {
+    background: #d4af37;
+    color: black;
+}
+
+.reject {
+    background: #ff4444;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* ERROR */
+#error {
+    color: red;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">Bono Admin</div>
+
+    <div class="menu">
+        <a href="#">Dashboard</a>
+        <a href="#">Applications</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+    <h1>Admin Dashboard</h1>
+
+    <div id="error"></div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat"><h2 id="total">0</h2><p>Total</p></div>
+        <div class="stat"><h2 id="approved">0</h2><p>Approved</p></div>
+        <div class="stat"><h2 id="rejected">0</h2><p>Rejected</p></div>
+        <div class="stat"><h2 id="pending">0</h2><p>Pending</p></div>
+    </div>
+
+    <h2>Applications</h2>
+    <div id="apps"></div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+
+async function load() {
+
+    const headers = {
+        "Authorization": "Bearer " + token
+    };
+
+    const res = await fetch(`${API}/applications/analytics/overview`, { headers });
+    const data = await res.json();
+
+    document.getElementById("total").innerText = data.data.total;
+    document.getElementById("approved").innerText = data.data.approved;
+    document.getElementById("rejected").innerText = data.data.rejected;
+    document.getElementById("pending").innerText = data.data.pending;
+
+    const appsRes = await fetch(`${API}/applications/`, { headers });
+    const apps = await appsRes.json();
+
+    const container = document.getElementById("apps");
+    container.innerHTML = "";
+
+    apps.data.forEach(a => {
+        container.innerHTML += `
+            <div class="card">
+                <b>${a.name}</b><br>
+                ${a.email}<br>
+                ${a.program}<br>
+                Status: ${a.status}
+                <br><br>
+
+                <button onclick="approve(${a.id})">Approve</button>
+                <button onclick="reject(${a.id})">Reject</button>
+            </div>
+        `;
+    });
+}
+
+async function approve(id) {
+    await fetch(`${API}/applications/${id}/approve`, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    load();
+}
+
+async function reject(id) {
+    await fetch(`${API}/applications/${id}/reject`, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    load();
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+load();
+</script>
+
+</body>
+</html>
