@@ -3,17 +3,24 @@ from datetime import datetime
 from .database import Base
 from sqlalchemy.orm import relationship
 
+
+# =========================
+# USERS (Admin, Mentor, Tutor)
+# =========================
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    role = Column(String, nullable=False)  # admin | mentor | tutor | volunteer
+    id = Column(Integer, primary_key=True)
 
-    # Relationship to applications they manage
-    applications = relationship("Application", back_populates="mentor")
-    
+    username = Column(String, unique=True)
+    password_hash = Column(String)
+    role = Column(String)
+
+    assignments = relationship("Assignment", back_populates="mentor")
+
+# =========================
+# APPLICATIONS
+# =========================
 class Application(Base):
     __tablename__ = "applications"
 
@@ -25,12 +32,60 @@ class Application(Base):
     status = Column(String, default="pending")
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    mentor_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    assigned_admin_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
-    # FIXED RELATIONSHIP
-    mentor = relationship("User", back_populates="applications")
+
+# =========================
+# SCHOOLS
+# =========================
+class School(Base):
+    __tablename__ = "schools"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+
+    mentees = relationship("Mentee", back_populates="school")
     
     
+# =========================
+# MENTEES
+# =========================
+class Mentee(Base):
+    __tablename__ = "mentees"
+
+    id = Column(Integer, primary_key=True)
+
+    name = Column(String, nullable=False)
+    email = Column(String)
+    phone = Column(String)
+    grade = Column(String)
+
+    school_id = Column(Integer, ForeignKey("schools.id"))
+
+    school = relationship(
+        "School",
+        back_populates="mentees"
+    )
+
+# =========================
+# ASSIGNMENT TABLE (CORE FIX)
+# =========================
+
+class Assignment(Base):
+    __tablename__ = "assignments"
+
+    id = Column(Integer, primary_key=True)
+
+    mentor_id = Column(Integer, ForeignKey("users.id"))
+    mentee_id = Column(Integer, ForeignKey("mentees.id"))
+
+    mentor = relationship("User", back_populates="assignments")
+    mentee = relationship("Mentee")
+    
+
+# =========================
+# CONTACT
+# =========================
 class ContactMessage(Base):
     __tablename__ = "contact_messages"
 
@@ -39,41 +94,3 @@ class ContactMessage(Base):
     email = Column(String)
     message = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
-# VOLUNTEERS (NEW FEATURE)
-class Volunteer(Base):
-    __tablename__ = "volunteers"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String)
-    role = Column(String)   # mentoring / tutoring / career guidance
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-class Admin(Base):
-    __tablename__ = "admins"
-
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True)
-    password = Column(String)
-    
-# -------------------------
-# MENTEES (ASSIGNED TO VOLUNTEERS)
-# -------------------------
-class Mentee(Base):
-    __tablename__ = "mentees"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    name = Column(String)
-    email = Column(String)
-
-    volunteer_id = Column(Integer, ForeignKey("volunteers.id"))
-    
-class MentorMentee(Base):
-    __tablename__ = "mentor_mentees"
-
-    id = Column(Integer, primary_key=True)
-    mentor_id = Column(Integer, ForeignKey("users.id"))
-    mentee_name = Column(String)
-    mentee_email = Column(String)

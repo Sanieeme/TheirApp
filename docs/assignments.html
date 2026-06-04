@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Control | Bono Foundation</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --bg-sidebar: #020202;
+            --bg-card: #121212;
+            --bg-input: #1a1a1a;
+            --gold-primary: #d4af37;
+            --gold-hover: #f3cd57;
+            --gold-muted: rgba(212, 175, 55, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --success: #4ade80;
+            --danger: #f87171;
+        }
+
+        body {
+            margin: 0;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* SIDEBAR NAV */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-sidebar);
+            position: fixed;
+            border-right: 1px solid var(--border-color);
+            padding: 30px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo { 
+            color: var(--gold-primary); 
+            font-size: 24px; 
+            font-weight: 700; 
+            margin-bottom: 25px; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .menu a { 
+            display: flex;
+            align-items: center;
+            color: var(--text-muted); 
+            padding: 14px 16px; 
+            text-decoration: none; 
+            margin-bottom: 10px; 
+            border-radius: 8px; 
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .menu a:hover, .menu a.active { 
+            background: var(--gold-primary); 
+            color: #000000; 
+            font-weight: 600; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        /* MAIN CONTENT AREA */
+        .main { 
+            margin-left: 300px; 
+            padding: 50px 40px 50px 0; 
+            max-width: 1300px; 
+        }
+        
+        h1 { 
+            color: var(--text-main); 
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 0; 
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 35px;
+        }
+        
+        /* METRIC CARDS GRID */
+        .summary-bar { 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; 
+            margin-bottom: 40px; 
+        }
+        
+        .metric-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            padding: 22px; 
+            border-radius: 12px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .metric-card label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .metric-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        /* FORM CONTROL MODULE */
+        .action-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            padding: 30px; 
+            border-radius: 16px; 
+            margin-bottom: 45px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .action-card h2 {
+            color: var(--gold-primary);
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row { 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 20px; 
+            align-items: flex-end; 
+        }
+        
+        .form-group { 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label { 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+        
+        select { 
+            width: 100%; 
+            padding: 12px 16px; 
+            background: var(--bg-input); 
+            color: var(--text-main); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 8px; 
+            font-size: 14px; 
+            transition: border-color 0.3s ease;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23d4af37'><polygon points='0,0 10,0 5,5'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+        
+        select:focus {
+            border-color: var(--gold-primary);
+        }
+        
+        button.btn-primary { 
+            background: var(--gold-primary); 
+            color: #000000; 
+            padding: 13px 28px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 14px; 
+            transition: all 0.3s ease; 
+            height: 45px;
+        }
+        
+        button.btn-primary:hover { 
+            background: var(--gold-hover); 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* VIEW FILTER CONTROLS */
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header-row h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .filter-tabs { 
+            display: flex; 
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .tab-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            padding: 8px 18px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-btn.active { 
+            background: var(--gold-muted); 
+            color: var(--gold-primary); 
+            font-weight: 600;
+        }
+
+        /* DATA MATRIX VIEWPORT */
+        .table-container { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: left; 
+            font-size: 14px; 
+        }
+        
+        th { 
+            background: #161616; 
+            color: var(--gold-primary); 
+            padding: 18px 20px; 
+            font-weight: 600; 
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color); 
+        }
+        
+        td { 
+            padding: 18px 20px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            color: rgba(255,255,255,0.85); 
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td { 
+            background: rgba(212, 175, 55, 0.02); 
+            color: #fff;
+        }
+
+        /* LUXURY BADGE GRAPHICS */
+        .badge { 
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-size: 11px; 
+            font-weight: 600; 
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .badge.assigned { 
+            background: rgba(74, 222, 128, 0.1); 
+            color: var(--success); 
+            border: 1px solid rgba(74, 222, 128, 0.2); 
+        }
+        
+        .badge.unassigned { 
+            background: rgba(248, 113, 113, 0.1); 
+            color: var(--danger); 
+            border: 1px solid rgba(248, 113, 113, 0.2); 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Bono Admin</div>
+        <div class="menu">
+            <a href="index.html" style="color: var(--gold-primary); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; border-radius: 0;">← Public Site</a>
+            
+            <a href="admin.html">Applications</a>
+            <a href="assignments.html" class="active">Assignments</a>
+            <a href="#" onclick="logout()" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); border-radius: 0; padding-top: 20px;">Logout</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h1>Mentor & Student Assignments</h1>
+        <div class="subtitle">Connect students with mentors and review your current matches.</div>
+        
+        <div class="summary-bar">
+            <div class="metric-card">
+                <label>Total Students</label>
+                <div class="value" id="count-total">0</div>
+            </div>
+            <div class="metric-card">
+                <label>Matched Students</label>
+                <div class="value" id="count-assigned" style="color: var(--success);">0</div>
+            </div>
+            <div class="metric-card">
+                <label>Students Needing a Mentor</label>
+                <div class="value" id="count-unassigned" style="color: var(--danger);">0</div>
+            </div>
+        </div>
+
+        <div class="action-card">
+            <h2>Quick Match Setup</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>1. Select School</label>
+                    <select id="assign_school" onchange="loadSchoolMentees()"></select>
+                </div>
+                <div class="form-group">
+                    <label>2. Select Student</label>
+                    <select id="assign_mentee"></select>
+                </div>
+                <div class="form-group">
+                    <label>3. Select Mentor</label>
+                    <select id="assign_mentor"></select>
+                </div>
+                <button class="btn-primary" onclick="executeAssignment()">Link Mentor & Student</button>
+            </div>
+        </div>
+
+        <div class="section-header-row">
+            <h2>Master Matching Directory</h2>
+            <div class="filter-tabs">
+                <button class="tab-btn active" onclick="filterTable('all', this)">All Records</button>
+                <button class="tab-btn" onclick="filterTable('assigned', this)">Matched</button>
+                <button class="tab-btn" onclick="filterTable('unassigned', this)">Unmatched</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Email Address</th>
+                        <th>Grade</th>
+                        <th>School Hub</th>
+                        <th>Status</th>
+                        <th>Assigned Mentor</th>
+                    </tr>
+                </thead>
+                <tbody id="master-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API = "http://127.0.0.1:8000";
+        const token = localStorage.getItem("token");
+        let masterCache = [];
+
+        if (!token) window.location.href = "login.html";
+
+        async function init() {
+            await loadDropdownConfiguration();
+            await loadMasterTableData();
+        }
+
+        async function loadDropdownConfiguration() {
+            const headers = { "Authorization": `Bearer ${token}` };
+            
+            try {
+                const schoolRes = await fetch(`${API}/applications/schools`, { headers });
+                const schools = await schoolRes.json();
+                const schoolSel = document.getElementById("assign_school");
+                schoolSel.innerHTML = "<option value=''>Select a school...</option>";
+                schools.data.forEach(s => schoolSel.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+
+                const mentorRes = await fetch(`${API}/applications/mentors`, { headers });
+                const mentors = await mentorRes.json();
+                const mentorSel = document.getElementById("assign_mentor");
+                mentorSel.innerHTML = "<option value=''>Select a mentor...</option>";
+                mentors.data.forEach(m => mentorSel.innerHTML += `<option value="${m.id}">${m.username}</option>`);
+            } catch(e) {
+                console.error("Error setting configuration dropdowns.", e);
+            }
+        }
+
+        async function loadSchoolMentees() {
+            const schoolSelElement = document.getElementById("assign_school");
+            const schoolId = schoolSelElement.value;
+            if(!schoolId) return;
+
+            const menteeSel = document.getElementById("assign_mentee");
+            menteeSel.innerHTML = "<option value=''>Select a student...</option>";
+            
+            const selectedSchoolName = schoolSelElement.options[schoolSelElement.selectedIndex].text;
+            const filtered = masterCache.filter(m => m.school === selectedSchoolName);
+            
+            filtered.forEach(m => {
+                menteeSel.innerHTML += `<option value="${m.mentee_id}">${m.name}</option>`;
+            });
+        }
+
+        async function loadMasterTableData() {
+            try {
+                const res = await fetch(`${API}/applications/mentees-with-mentors`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const responseData = await res.json();
+                masterCache = responseData.data || [];
+
+                const total = masterCache.length;
+                const assigned = masterCache.filter(m => m.is_assigned).length;
+                const unassigned = total - assigned;
+
+                document.getElementById("count-total").innerText = total;
+                document.getElementById("count-assigned").innerText = assigned;
+                document.getElementById("count-unassigned").innerText = unassigned;
+
+                renderTableRows(masterCache);
+            } catch(e) {
+                console.error("Could not load database directory lists.", e);
+            }
+        }
+
+        function renderTableRows(dataList) {
+            const tbody = document.getElementById("master-table-body");
+            tbody.innerHTML = "";
+
+            if(dataList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 40px 0;">No profiles found matching your selection.</td></tr>`;
+                return;
+            }
+
+            dataList.forEach(m => {
+                const badgeClass = m.is_assigned ? "assigned" : "unassigned";
+                const badgeLabel = m.is_assigned ? "Matched" : "Unmatched";
+                const mentorDisplayColor = m.is_assigned ? "var(--gold-primary)" : "var(--text-muted)";
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600; color:#fff;">${m.name}</td>
+                        <td style="color: var(--text-muted); font-size:13px;">${m.email}</td>
+                        <td>${m.grade}</td>
+                        <td>${m.school}</td>
+                        <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+                        <td style="font-weight:600; color: ${mentorDisplayColor}; font-size:13px;">${m.assigned_mentor}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterTable(viewMode, element) {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            element.classList.add("active");
+
+            if (viewMode === "assigned") {
+                renderTableRows(masterCache.filter(m => m.is_assigned));
+            } else if (viewMode === "unassigned") {
+                renderTableRows(masterCache.filter(m => !m.is_assigned));
+            } else {
+                renderTableRows(masterCache);
+            }
+        }
+
+        async function executeAssignment() {
+            const mentorId = document.getElementById("assign_mentor").value;
+            const menteeId = document.getElementById("assign_mentee").value;
+
+            if(!mentorId || !menteeId) {
+                alert("Please select both a student and a mentor first.");
+                return;
+            }
+
+            const res = await fetch(`${API}/mentees/assign`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    mentor_id: Number(mentorId),
+                    mentee_ids: [Number(menteeId)]
+                })
+            });
+
+            if(res.ok) {
+                alert("Mentor and student linked successfully!");
+                init();
+            } else {
+                const err = await res.json();
+                alert(err.detail || "Could not complete assignment mapping at this time.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+
+        init();
+    </script>
+</body>
+</html>

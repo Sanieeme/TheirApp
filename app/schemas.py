@@ -77,3 +77,12 @@ class VolunteerResponse(VolunteerCreate):
 class LoginRequest(BaseModel):
     username: str
     password: str
+    
+    
+
+class MenteeCreate(BaseModel):
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    grade: Optional[str] = None
+    school_id: int

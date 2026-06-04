@@ -5,6 +5,8 @@ from app.database import Base, engine
 from app.routers import applications, contact
 from datetime import datetime
 from .routers import auth, admin, applications
+from app.routers import mentees
+from app.routers import schools
 
 # Create DB tables
 Base.metadata.create_all(bind=engine)
@@ -26,6 +28,8 @@ app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(applications.router)
 app.include_router(contact.router)
+app.include_router(mentees.router)
+app.include_router(schools.router)
 
 
 @app.get("/")
