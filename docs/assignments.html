@@ -12,12 +12,13 @@
             --bg-input: #1a1a1a;
             --gold-primary: #d4af37;
             --gold-hover: #f3cd57;
-            --gold-muted: rgba(212, 175, 55, 0.2);
+            --gold-muted: rgba(212, 175, 55, 0.12);
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
             --border-color: rgba(212, 175, 55, 0.15);
             --success: #4ade80;
             --danger: #f87171;
+            --info: #38bdf8;
         }
 
         body {
@@ -104,16 +105,14 @@
             border: 1px solid var(--border-color); 
             padding: 22px; 
             border-radius: 12px; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         .metric-card label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: block;
             margin-bottom: 8px;
         }
 
@@ -123,30 +122,37 @@
             color: var(--gold-primary);
         }
 
-        /* FORM CONTROL MODULE */
+        /* ACTIONS SECTION GRID */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
         .action-card { 
             background: var(--bg-card); 
-            border: 1px solid var(--border-color); 
-            padding: 30px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            padding: 25px; 
             border-radius: 16px; 
-            margin-bottom: 45px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .action-card h2 {
             color: var(--gold-primary);
-            font-size: 18px;
+            font-size: 16px;
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: 600;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .form-row { 
-            display: grid;
-            grid-template-columns: repeat(3, 1fr) auto;
-            gap: 20px; 
-            align-items: flex-end; 
+        .form-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         
         .form-group { 
@@ -157,21 +163,25 @@
         .form-group label { 
             font-size: 11px; 
             color: var(--text-muted); 
-            margin-bottom: 10px; 
+            margin-bottom: 8px; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
         }
         
-        select { 
+        select, input[type="text"] { 
+            box-sizing: border-box;
             width: 100%; 
             padding: 12px 16px; 
             background: var(--bg-input); 
             color: var(--text-main); 
-            border: 1px solid rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.08); 
             border-radius: 8px; 
             font-size: 14px; 
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
             outline: none;
+        }
+
+        select {
             cursor: pointer;
             appearance: none;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23d4af37'><polygon points='0,0 10,0 5,5'/></svg>");
@@ -179,27 +189,44 @@
             background-position: right 16px center;
         }
         
-        select:focus {
+        select:focus, input[type="text"]:focus {
             border-color: var(--gold-primary);
+            background: #1e1e1e;
         }
         
         button.btn-primary { 
             background: var(--gold-primary); 
             color: #000000; 
-            padding: 13px 28px; 
+            padding: 13px 24px; 
             border: none; 
             border-radius: 8px; 
             font-weight: 600; 
             cursor: pointer; 
             font-size: 14px; 
             transition: all 0.3s ease; 
-            height: 45px;
         }
         
         button.btn-primary:hover { 
             background: var(--gold-hover); 
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        button.btn-unpair {
+            background: rgba(248, 113, 113, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button.btn-unpair:hover {
+            background: var(--danger);
+            color: #000000;
+            border-color: var(--danger);
         }
 
         /* VIEW FILTER CONTROLS */
@@ -208,12 +235,19 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         .section-header-row h2 {
             margin: 0;
             font-size: 20px;
             font-weight: 600;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
         .filter-tabs { 
@@ -249,6 +283,7 @@
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
         }
         
         table { 
@@ -259,18 +294,18 @@
         }
         
         th { 
-            background: #161616; 
+            background: #141414; 
             color: var(--gold-primary); 
-            padding: 18px 20px; 
+            padding: 16px 20px; 
             font-weight: 600; 
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 1px solid var(--border-color); 
         }
         
         td { 
-            padding: 18px 20px; 
+            padding: 16px 20px; 
             border-bottom: 1px solid rgba(255,255,255,0.03); 
             color: rgba(255,255,255,0.85); 
         }
@@ -280,8 +315,33 @@
         }
 
         tr:hover td { 
-            background: rgba(212, 175, 55, 0.02); 
-            color: #fff;
+            background: rgba(212, 175, 55, 0.01); 
+        }
+
+        /* LOG ARCHIVE BOX LISTING */
+        .log-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 230px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .log-item {
+            background: var(--bg-input);
+            border-left: 3px solid var(--danger);
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .log-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
         }
 
         /* LUXURY BADGE GRAPHICS */
@@ -303,6 +363,12 @@
         }
         
         .badge.unassigned { 
+            background: rgba(56, 189, 248, 0.1); 
+            color: var(--info); 
+            border: 1px solid rgba(56, 189, 248, 0.2); 
+        }
+
+        .badge.unpaired { 
             background: rgba(248, 113, 113, 0.1); 
             color: var(--danger); 
             border: 1px solid rgba(248, 113, 113, 0.2); 
@@ -315,7 +381,6 @@
         <div class="logo">Bono Admin</div>
         <div class="menu">
             <a href="index.html" style="color: var(--gold-primary); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; border-radius: 0;">← Public Site</a>
-            
             <a href="admin.html">Applications</a>
             <a href="assignments.html" class="active">Assignments</a>
             <a href="#" onclick="logout()" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); border-radius: 0; padding-top: 20px;">Logout</a>
@@ -324,48 +389,64 @@
 
     <div class="main">
         <h1>Mentor & Student Assignments</h1>
-        <div class="subtitle">Connect students with mentors and review your current matches.</div>
+        <div class="subtitle">Connect students with mentors, track unpaired entries, and manage connection maps.</div>
         
         <div class="summary-bar">
             <div class="metric-card">
-                <label>Total Students</label>
+                <label>Total Registered Students</label>
                 <div class="value" id="count-total">0</div>
             </div>
             <div class="metric-card">
-                <label>Matched Students</label>
+                <label>Active Connections</label>
                 <div class="value" id="count-assigned" style="color: var(--success);">0</div>
             </div>
             <div class="metric-card">
-                <label>Students Needing a Mentor</label>
+                <label>Unpaired / Disconnected</label>
                 <div class="value" id="count-unassigned" style="color: var(--danger);">0</div>
             </div>
         </div>
 
-        <div class="action-card">
-            <h2>Quick Match Setup</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>1. Select School</label>
-                    <select id="assign_school" onchange="loadSchoolMentees()"></select>
+        <div class="dashboard-grid">
+            <div class="action-card">
+                <h2>Establish Connection Handshake</h2>
+                <div class="form-vertical">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="form-group">
+                            <label>1. School Campus Hub</label>
+                            <select id="assign_school" onchange="loadSchoolMentees()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>2. Student Name</label>
+                            <select id="assign_mentee"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>3. Target Mentor</label>
+                            <select id="assign_mentor"></select>
+                        </div>
+                    </div>
+                    <div style="text-align: right; margin-top: 5px;">
+                        <button class="btn-primary" style="width: 220px;" onclick="executeAssignment()">Link Mentor & Student</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>2. Select Student</label>
-                    <select id="assign_mentee"></select>
+            </div>
+
+            <div class="action-card">
+                <h2>Unpair System Audit Log</h2>
+                <div class="log-stream" id="audit-logs">
+                    <div style="color: var(--text-muted); font-size:12px; text-align:center; padding-top:40px;">No unpair actions logged in this session.</div>
                 </div>
-                <div class="form-group">
-                    <label>3. Select Mentor</label>
-                    <select id="assign_mentor"></select>
-                </div>
-                <button class="btn-primary" onclick="executeAssignment()">Link Mentor & Student</button>
             </div>
         </div>
 
         <div class="section-header-row">
             <h2>Master Matching Directory</h2>
-            <div class="filter-tabs">
-                <button class="tab-btn active" onclick="filterTable('all', this)">All Records</button>
-                <button class="tab-btn" onclick="filterTable('assigned', this)">Matched</button>
-                <button class="tab-btn" onclick="filterTable('unassigned', this)">Unmatched</button>
+            <div class="filter-controls">
+                <input type="text" id="table-search" placeholder="Search rows instantly..." onkeyup="applyCurrentFilter()" style="width: 240px; padding: 8px 14px; font-size: 13px;">
+                <div class="filter-tabs">
+                    <button class="tab-btn active" id="tab-all" onclick="filterTable('all', this)">All Records</button>
+                    <button class="tab-btn" id="tab-assigned" onclick="filterTable('assigned', this)">Matched</button>
+                    <button class="tab-btn" id="tab-unassigned" onclick="filterTable('unassigned', this)">Unpaired / New</button>
+                </div>
             </div>
         </div>
 
@@ -377,8 +458,9 @@
                         <th>Email Address</th>
                         <th>Grade</th>
                         <th>School Hub</th>
-                        <th>Status</th>
+                        <th>Connection Status</th>
                         <th>Assigned Mentor</th>
+                        <th style="text-align: right;">Action Row</th>
                     </tr>
                 </thead>
                 <tbody id="master-table-body">
@@ -390,18 +472,27 @@
     <script>
         const API = "http://127.0.0.1:8000";
         const token = localStorage.getItem("token");
+        
         let masterCache = [];
+        let unpairedSystemTracker = new Set(); // Track students dynamically marked as Unpaired locally
+        let currentFilterMode = 'all';
+        let liveSyncInterval = null; // Background worker registration key
 
         if (!token) window.location.href = "login.html";
 
         async function init() {
             await loadDropdownConfiguration();
             await loadMasterTableData();
+
+            // Setup real-time silent background interval loop (polling every 5 seconds)
+            if (liveSyncInterval) clearInterval(liveSyncInterval);
+            liveSyncInterval = setInterval(async () => {
+                await backgroundSyncData();
+            }, 5000);
         }
 
         async function loadDropdownConfiguration() {
             const headers = { "Authorization": `Bearer ${token}` };
-            
             try {
                 const schoolRes = await fetch(`${API}/applications/schools`, { headers });
                 const schools = await schoolRes.json();
@@ -443,18 +534,54 @@
                 const responseData = await res.json();
                 masterCache = responseData.data || [];
 
-                const total = masterCache.length;
-                const assigned = masterCache.filter(m => m.is_assigned).length;
-                const unassigned = total - assigned;
-
-                document.getElementById("count-total").innerText = total;
-                document.getElementById("count-assigned").innerText = assigned;
-                document.getElementById("count-unassigned").innerText = unassigned;
-
-                renderTableRows(masterCache);
+                updateDashboardMetrics();
+                applyCurrentFilter();
             } catch(e) {
                 console.error("Could not load database directory lists.", e);
             }
+        }
+
+        // Silent automated hot-loader polling system
+        async function backgroundSyncData() {
+            try {
+                const res = await fetch(`${API}/applications/mentees-with-mentors`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    const responseData = await res.json();
+                    const newFetchedData = responseData.data || [];
+                    
+                    // Trigger UI shifts only if modifications exist across database models
+                    if (JSON.stringify(newFetchedData) !== JSON.stringify(masterCache)) {
+                        masterCache = newFetchedData;
+                        
+                        updateDashboardMetrics();
+                        applyCurrentFilter();
+                        
+                        // Prevent broken focus drops on active input forms
+                        const currentSchoolSelected = document.getElementById("assign_school").value;
+                        if (currentSchoolSelected) {
+                            loadSchoolMentees();
+                        }
+                        console.log("Database hot-update synced cleanly in background.");
+                    }
+                }
+            } catch (e) {
+                console.error("Background auto hot-loading worker operation failed:", e);
+            }
+        }
+
+        function updateDashboardMetrics() {
+            const total = masterCache.length;
+            
+            // A student is explicitly assigned if backend says so AND they weren't manually unpaired locally
+            const assigned = masterCache.filter(m => m.is_assigned && !unpairedSystemTracker.has(m.mentee_id)).length;
+            const unassigned = total - assigned;
+
+            document.getElementById("count-total").innerText = total;
+            document.getElementById("count-assigned").innerText = assigned;
+            document.getElementById("count-unassigned").innerText = unassigned;
         }
 
         function renderTableRows(dataList) {
@@ -462,23 +589,44 @@
             tbody.innerHTML = "";
 
             if(dataList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 40px 0;">No profiles found matching your selection.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 40px 0;">No matching profiles found in dashboard workspace.</td></tr>`;
                 return;
             }
 
             dataList.forEach(m => {
-                const badgeClass = m.is_assigned ? "assigned" : "unassigned";
-                const badgeLabel = m.is_assigned ? "Matched" : "Unmatched";
-                const mentorDisplayColor = m.is_assigned ? "var(--gold-primary)" : "var(--text-muted)";
+                let badgeClass = "unassigned";
+                let badgeLabel = "New Entry";
+                let mentorNameDisplay = m.assigned_mentor || 'None';
+                let mentorColor = "var(--text-muted)";
+                
+                // Determine layout configuration if student has been unpaired or assigned
+                if (unpairedSystemTracker.has(m.mentee_id)) {
+                    badgeClass = "unpaired";
+                    badgeLabel = "Unpaired";
+                    mentorNameDisplay = "None (Dispatched)";
+                } else if (m.is_assigned) {
+                    badgeClass = "assigned";
+                    badgeLabel = "Matched";
+                    mentorColor = "var(--gold-primary)";
+                }
+
+                const gradeDisplay = m.grade ? m.grade : "Grade 12";
+                
+                // Unpair button only prints if status resolves cleanly to assigned matching profile 
+                const isCurrentlyAssigned = m.is_assigned && !unpairedSystemTracker.has(m.mentee_id);
+                const actionButton = isCurrentlyAssigned 
+                    ? `<button class="btn-unpair" onclick="executeUnpairing(${m.mentee_id}, '${m.name.replace(/'/g, "\\'")}')">Unpair</button>` 
+                    : `<span style="color: var(--text-muted); font-size: 12px;">--</span>`;
                 
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:600; color:#fff;">${m.name}</td>
                         <td style="color: var(--text-muted); font-size:13px;">${m.email}</td>
-                        <td>${m.grade}</td>
+                        <td>${gradeDisplay}</td>
                         <td>${m.school}</td>
                         <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-                        <td style="font-weight:600; color: ${mentorDisplayColor}; font-size:13px;">${m.assigned_mentor}</td>
+                        <td style="font-weight:600; color: ${mentorColor}; font-size:13px;">${mentorNameDisplay}</td>
+                        <td style="text-align: right;">${actionButton}</td>
                     </tr>
                 `;
             });
@@ -487,47 +635,171 @@
         function filterTable(viewMode, element) {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
             element.classList.add("active");
+            currentFilterMode = viewMode;
+            applyCurrentFilter();
+        }
 
-            if (viewMode === "assigned") {
-                renderTableRows(masterCache.filter(m => m.is_assigned));
-            } else if (viewMode === "unassigned") {
-                renderTableRows(masterCache.filter(m => !m.is_assigned));
-            } else {
-                renderTableRows(masterCache);
+        function applyCurrentFilter() {
+            const searchQuery = document.getElementById("table-search").value.toLowerCase().trim();
+            
+            // Phase 1: Filter dataset down via primary view tab states
+            let dataset = masterCache;
+            if (currentFilterMode === "assigned") {
+                dataset = masterCache.filter(m => m.is_assigned && !unpairedSystemTracker.has(m.mentee_id));
+            } else if (currentFilterMode === "unassigned") {
+                dataset = masterCache.filter(m => !m.is_assigned || unpairedSystemTracker.has(m.mentee_id));
             }
+
+            // Phase 2: Live Query processing engine check
+            if (searchQuery !== "") {
+                dataset = dataset.filter(m => 
+                    m.name.toLowerCase().includes(searchQuery) ||
+                    m.email.toLowerCase().includes(searchQuery) ||
+                    m.school.toLowerCase().includes(searchQuery) ||
+                    (m.assigned_mentor && m.assigned_mentor.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            renderTableRows(dataset);
         }
 
         async function executeAssignment() {
-            const mentorId = document.getElementById("assign_mentor").value;
-            const menteeId = document.getElementById("assign_mentee").value;
+            const mentorSel = document.getElementById("assign_mentor");
+            const menteeSel = document.getElementById("assign_mentee");
+            
+            const mentorId = mentorSel.value;
+            const menteeId = menteeSel.value;
 
             if(!mentorId || !menteeId) {
                 alert("Please select both a student and a mentor first.");
                 return;
             }
 
-            const res = await fetch(`${API}/mentees/assign`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    mentor_id: Number(mentorId),
-                    mentee_ids: [Number(menteeId)]
-                })
-            });
+            const mentorName = mentorSel.options[mentorSel.selectedIndex].text;
+            const targetMentee = masterCache.find(m => m.mentee_id == menteeId);
+            const menteeName = targetMentee ? targetMentee.name : menteeSel.options[menteeSel.selectedIndex].text;
+            const menteePhone = (targetMentee && targetMentee.phone) ? targetMentee.phone : "Not Provided";
 
-            if(res.ok) {
-                alert("Mentor and student linked successfully!");
-                init();
-            } else {
-                const err = await res.json();
-                alert(err.detail || "Could not complete assignment mapping at this time.");
+            try {
+                // FIXED: Direct matching applications endpoint connection mapping URL context paths
+                const res = await fetch(`${API}/applications/assign`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        mentor_id: Number(mentorId),
+                        mentee_ids: [Number(menteeId)]
+                    })
+                });
+
+                if(res.ok) {
+                    alert("Mentor and student linked successfully!");
+                    
+                    // Remove entry tracking flag since connection has been re-established
+                    unpairedSystemTracker.delete(Number(menteeId));
+                    
+                    sendAssignmentEmail(mentorName, menteeName, menteePhone);
+                    await loadMasterTableData();
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || "Could not complete assignment mapping at this time.");
+                }
+            } catch(e) {
+                console.error("Assignment execution failed:", e);
+                alert("An internal connection error occurred.");
             }
         }
 
+        // ================= RECOGNIZED UNPAIRING ROUTINE & AUDIT ENGINE =================
+        async function executeUnpairing(menteeId, menteeName) {
+            const reason = prompt(`Provide administrative reason for unpairing ${menteeName}:`);
+            
+            if (reason === null) return; // Escape sequence handle
+            
+            if (reason.trim() === "") {
+                alert("Action denied: You must type a reason to proceed with unpairing.");
+                return;
+            }
+
+            try {
+                // FIXED: Direct matching applications endpoint connection fallback URL context paths
+                const res = await fetch(`${API}/applications/unassign`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        mentee_id: Number(menteeId),
+                        reason: reason.trim()
+                    })
+                });
+
+                if (res.ok) {
+                    alert(`Connection broken: ${menteeName} is now unpaired.`);
+                    
+                    // Inject to tracker map variables immediately
+                    unpairedSystemTracker.add(Number(menteeId));
+                    
+                    // Log entries to side panel audit framework pipeline
+                    logUnpairEventToDashboard(menteeName, reason.trim());
+                    
+                    // Recompute layouts seamlessly
+                    updateDashboardMetrics();
+                    applyCurrentFilter();
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || "Could not break connection map data records.");
+                }
+            } catch (e) {
+                console.error("Unpairing operation breakdown:", e);
+                alert("Could not communicate with server records.");
+            }
+        }
+
+        function logUnpairEventToDashboard(studentName, reasonText) {
+            const container = document.getElementById("audit-logs");
+            
+            // Strip out empty message placeholders on initial call initialization
+            if(container.innerHTML.includes("No unpair actions")) {
+                container.innerHTML = "";
+            }
+
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const logHTML = `
+                <div class="log-item">
+                    <div class="log-meta">
+                        <span style="color: var(--danger); font-weight:700;">UNPAIRED ACTION</span>
+                        <span>${timestamp}</span>
+                    </div>
+                    <div style="color: #ffffff; font-weight: 600; margin-bottom: 2px;">${studentName}</div>
+                    <div style="color: var(--text-muted); font-size: 12px; font-style: italic;">"Paragraph Reason: ${reasonText}"</div>
+                </div>
+            `;
+            
+            container.innerHTML = logHTML + container.innerHTML;
+        }
+
+        function sendAssignmentEmail(mentorName, studentName, studentPhone) {
+            const subject = encodeURIComponent("Bono Foundation - New Mentee Assignment Details");
+            const body = encodeURIComponent(
+                `Hello ${mentorName},\n\n` +
+                `This is an automated administrative notification from Bono Foundation.\n\n` +
+                `You have been successfully matched with a new student. Please review their contact information below:\n\n` +
+                `• Student Name: ${studentName}\n` +
+                `• Phone Number: ${studentPhone}\n\n` +
+                `Please reach out to your new mentee as soon as possible to establish your initial meeting schedule.\n\n` +
+                `Best regards,\n` +
+                `Bono Foundation Administration`
+            );
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
         function logout() {
+            if (liveSyncInterval) clearInterval(liveSyncInterval); // Drop loop routines on clear context actions
             localStorage.removeItem("token");
             window.location.href = "login.html";
         }

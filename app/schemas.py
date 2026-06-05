@@ -86,3 +86,7 @@ class MenteeCreate(BaseModel):
     phone: Optional[str] = None
     grade: Optional[str] = None
     school_id: int
+    
+class UnassignRequest(BaseModel):
+    mentee_id: int
+    reason: str

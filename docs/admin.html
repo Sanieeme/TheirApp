@@ -313,7 +313,6 @@
 <div class="main">
     <h1>Management Dashboard</h1>
 
-    <!-- ECOSYSTEM ANALYTICS PILLS -->
     <div class="stats">
         <div class="stat"><h2 id="total">0</h2><p>Total Applications</p></div>
         <div class="stat"><h2 id="approved" style="color: var(--success);">0</h2><p>Approved</p></div>
@@ -321,16 +320,13 @@
         <div class="stat"><h2 id="rejected" style="color: var(--danger);">0</h2><p>Declined / Archived</p></div>
     </div>
 
-    <!-- INCOMING SYSTEM APPLICATIONS -->
     <h2>New Signups Awaiting Review</h2>
     <div id="apps" class="grid-container"></div>
 
     <hr>
 
-    <!-- TWO COLUMN MANAGEMENT GRIDS -->
     <div class="grid-container" style="align-items: start; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));">
         
-        <!-- MODULE: ADD NEW SCHOOL -->
         <div>
             <h2>Register a Participating School</h2>
             <div class="card">
@@ -344,7 +340,6 @@
             </div>
         </div>
 
-        <!-- MODULE: LINK ASSIGNMENT DISPATCH -->
         <div>
             <h2>Connect Students and Mentors</h2>
             <div class="card">
@@ -373,7 +368,6 @@
         </div>
     </div>
 
-    <!-- MODULE: COMPREHENSIVE ADD MENTEE MODULE -->
     <h2>Register a Student Manually</h2>
     <div class="card" style="max-width: 800px;">
         <div class="form-grid">
@@ -391,7 +385,7 @@
             </div>
             <div>
                 <label>Grade Level</label>
-                <input id="m_grade" placeholder="e.g., Grade 11">
+                <input id="m_grade" placeholder="e.g., Grade 12">
             </div>
             <div>
                 <label>Gender Identity</label>
@@ -416,7 +410,6 @@
 
     <hr>
 
-    <!-- REGISTRY OVERVIEW LEDGER ARCHIVE (HIDDEN UNTIL REVEALED BIT-BY-BIT) -->
     <h2>Active Mentor & Student Pairs</h2>
     <div id="mentorAssignments" class="grid-container"></div>
     
@@ -535,7 +528,13 @@ async function addMentee() {
     const email = document.getElementById("m_email").value;
     const school = document.getElementById("m_school").value;
     const phone = document.getElementById("m_phone").value;
-    const grade = document.getElementById("m_grade").value;
+    
+    // FIX NULL GRADE: Fallback to "Grade 12" if the input field is left empty or blank
+    let grade = document.getElementById("m_grade").value.trim();
+    if (!grade) {
+        grade = "Grade 12";
+    }
+    
     const gender = document.getElementById("m_gender").value;
 
     if (!name || !email || !school) {
@@ -645,8 +644,23 @@ async function reject(id) {
 
 // ================= COMMIT REALTIME PAIR CHANNELS =================
 async function assignMentee() {
-    const mentorId = document.getElementById("assign_mentor").value;
-    const menteeId = document.getElementById("assign_mentee").value;
+    const mentorSel = document.getElementById("assign_mentor");
+    const menteeSel = document.getElementById("assign_mentee");
+    
+    const mentorId = mentorSel.value;
+    const menteeId = menteeSel.value;
+
+    if (!mentorId || !menteeId) {
+        alert("Please select a student and a mentor first.");
+        return;
+    }
+
+    const mentorName = mentorSel.options[mentorSel.selectedIndex].text;
+
+    // Look up data for the matched mentee using listedPairs cache array
+    const targetMentee = listedPairs.find(m => m.mentee_id == menteeId || m.id == menteeId);
+    const menteeName = targetMentee ? targetMentee.name : menteeSel.options[menteeSel.selectedIndex].text;
+    const menteePhone = (targetMentee && targetMentee.phone) ? targetMentee.phone : "Not Provided";
 
     const res = await fetch(`${API}/mentees/assign`, {
         method: "PUT",
@@ -667,7 +681,28 @@ async function assignMentee() {
     }
 
     alert("Connection established successfully!");
+    
+    // AUTOMATED EMAIL DISPATCH SYSTEM WITH NAME & PHONE NUMBER
+    sendAssignmentEmail(mentorName, menteeName, menteePhone);
+
     loadAssignments();
+}
+
+// AUTOMATIC DEEP-LINK EMAIL ROUTING INTERFACE
+function sendAssignmentEmail(mentorName, studentName, studentPhone) {
+    const subject = encodeURIComponent("Bono Foundation - New Mentee Assignment Details");
+    const body = encodeURIComponent(
+        `Hello ${mentorName},\n\n` +
+        `This is an automated administrative notification from Bono Foundation.\n\n` +
+        `You have been successfully matched with a new student. Please find their contact information below:\n\n` +
+        `• Student Name: ${studentName}\n` +
+        `• Phone Number: ${studentPhone}\n\n` +
+        `Please reach out to your new mentee as soon as possible to establish your initial introduction schedule.\n\n` +
+        `Best regards,\n` +
+        `Bono Foundation Administration`
+    );
+    
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
 
 // ================= SYNCHRONIZE COMPLETE VISUAL ARCHIVE LIST MAPS =================
@@ -708,6 +743,15 @@ function renderPairsBitByBit() {
         const currentBadgeClass = isUnassigned ? "rejected" : "approved";
         const mentorHighlight = isUnassigned ? "color: var(--text-muted);" : "color: var(--gold-primary); font-weight:600;";
         
+        // FIX NULL GRADE: Fallback to "Grade 12" if the value in the list dataset comes back null/blank
+        const gradeDisplay = mentee.grade ? mentee.grade : "Grade 12";
+
+        // FIX GENDER DISPLAY: Clean up line and drop artifact if gender is missing or N/A
+        let classRankDisplay = gradeDisplay;
+        if (mentee.gender && mentee.gender !== "N/A" && mentee.gender.toLowerCase() !== "null") {
+            classRankDisplay += ` • (${mentee.gender})`;
+        }
+
         container.innerHTML += `
             <div class="card" style="display:flex; flex-direction:column; justify-content:space-between; line-height: 1.6;">
                 <div>
@@ -717,7 +761,7 @@ function renderPairsBitByBit() {
                     </div>
                     <div class="app-meta" style="font-size: 13px; color: var(--text-muted);"><strong>Email:</strong> ${mentee.email}</div>
                     <div class="app-meta" style="font-size: 13px; color: var(--text-muted);"><strong>Phone:</strong> ${mentee.phone || 'N/A'}</div>
-                    <div class="app-meta" style="font-size: 13px; color: var(--text-muted);"><strong>Class Rank:</strong> ${mentee.grade || 'N/A'} • (${mentee.gender || 'N/A'})</div>
+                    <div class="app-meta" style="font-size: 13px; color: var(--text-muted);"><strong>Class Rank:</strong> ${classRankDisplay}</div>
                     <div class="app-meta" style="font-size: 13px; color: var(--text-muted);"><strong>School Hub:</strong> ${mentee.school}</div>
                 </div>
                 <div style="margin-top:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.04); font-size: 13px;">

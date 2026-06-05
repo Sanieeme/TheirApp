@@ -306,6 +306,8 @@ def get_schools(db: Session = Depends(get_db)):
     }
 
 
+
+
 # ========================
 # ADD MENTEE
 # ========================
@@ -339,6 +341,30 @@ def add_mentee(
     return {
         "success": True,
         "data": mentee
+    }
+
+
+
+@router.put("/unassign")
+def unassign_mentee(payload: schemas.UnassignRequest, db: Session = Depends(get_db), admin=Depends(admin_required)):
+    # Locate tracking assignment map row mapping parameters 
+    assignment = db.query(models.Assignment).filter_by(mentee_id=payload.mentee_id).first()
+    
+    if not assignment:
+        raise HTTPException(status_code=404, detail="No active connection mapping found for this student")
+
+    # Drop the mapping link from relational lookup architectures entirely
+    db.delete(assignment)
+    db.commit()
+
+    # NOTE: `payload.reason` contains the string passed from your admin interface prompt hook!
+    # If you build an AuditLog model later, you can add it right here:
+    # db.add(models.AuditLog(event="unpair", details=payload.reason, user_id=admin.id))
+    # db.commit()
+
+    return {
+        "success": True, 
+        "message": "Student successfully unpaired from mentor assignment maps."
     }
 
 # ========================
